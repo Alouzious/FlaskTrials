@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <!-- Brand Name Based on Login Status -->
+    {% if current_user.is_authenticated %}
+      <a class="navbar-brand" href="{{ url_for('dashboard.dashboard_page') }}">My E-Shop</a>
+    {% else %}
+      <a class="navbar-brand" href="{{ url_for('home.home_page') }}">My Flask App</a>
+    {% endif %}
+
+    <!-- Navbar Toggler for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'dashboard.dashboard_page' %}active{% endif %}" href="{{ url_for('dashboard.dashboard_page') }}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'dashboard.products' %}active{% endif %}" href="{{ url_for('dashboard.dashboard_page') }}">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'dashboard.contact' %}active{% endif %}" href="{{ url_for('dashboard.dashboard_page') }}">Contact Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'dashboard.about' %}active{% endif %}" href="{{ url_for('dashboard.dashboard_page') }}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'auth.update_profile' %}active{% endif %}" href="{{ url_for('auth.update_profile') }}">Update Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'auth.logout' %}active{% endif %}" href="{{ url_for('auth.logout') }}">Logout</a>
+          </li>
+          <!-- Display Profile Image -->
+          <li class="nav-item">
+            <a class="nav-link disabled text-white">
+              <img src="{{ url_for('static', filename='profile_pics/' + (current_user.profile_picture or 'default.jpg')) }}" alt="Profile Picture" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              {{ current_user.username }}
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'home.home_page' %}active{% endif %}" href="{{ url_for('home.home_page') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'auth.login' %}active{% endif %}" href="{{ url_for('auth.login') }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'auth.signup' %}active{% endif %}" href="{{ url_for('auth.signup') }}">Signup</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
