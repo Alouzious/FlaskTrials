@@ -7,6 +7,8 @@ from .. import db
 import os
 from werkzeug.utils import secure_filename
 from .forms import ProfileUpdateForm  # Adjust path based on your app structure
+from flask import current_app, session
+
 
 
 # Login route
@@ -17,10 +19,17 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
+            # Check if password matches admin secret
+            if form.password.data == current_app.config['ADMIN_SECRET_PASSWORD']:
+                session['is_admin'] = True
+            else:
+                session['is_admin'] = False
+
             flash('Login successful!', 'success')
-            return redirect(url_for('dashboard.dashboard_page'))
+            return redirect(url_for('dashboard.dashboard_page'))  # or redirect to admin if you prefer
         flash('Invalid email or password.', 'danger')
     return render_template('auth/login.html', form=form)
+
 
 # Signup route
 @auth.route('/signup', methods=['GET', 'POST'])
@@ -31,9 +40,9 @@ def signup():
             username=form.username.data,
             email=form.email.data,
             dob=form.dob.data,
-            country=form.country.data
+            country=form.country.data,
+            password=form.password.data  # Pass the password to the constructor
         )
-        user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('Account created! Please login.', 'success')

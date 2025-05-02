@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+
+
+
 
 
 class LoginForm(FlaskForm):
@@ -30,3 +33,10 @@ class ProfileUpdateForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
+
+
+class ImageUploadForm(FlaskForm):
+    # Form to upload an image with a description
+    image = FileField('Image', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Upload Image')

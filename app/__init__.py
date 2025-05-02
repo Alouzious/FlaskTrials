@@ -15,6 +15,7 @@ def create_app():
 
     # Configuration
     app.config['SECRET_KEY'] = os.urandom(24)  
+    app.config['ADMIN_SECRET_PASSWORD'] = 'adminaccess123'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
     app.config['UPLOAD_FOLDER'] = 'static/profile_pics'  # Folder for profile pictures
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limit file upload size (16MB)
@@ -35,10 +36,13 @@ def create_app():
     from .auth import auth as auth_blueprint
     from .dashboard import dashboard as dashboard_blueprint
     from .home import home as home_blueprint
+    from .admin import admin as admin_blueprint
+
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
     app.register_blueprint(home_blueprint, url_prefix='/')
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
     # Initialize migrate instance
     migrate = Migrate(app, db)
